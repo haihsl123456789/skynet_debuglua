@@ -1,0 +1,14 @@
+{  
+    "version": "0.2.0",  
+    "configurations": [  
+        {
+            "name": "skynet debugger",
+            "type": "lua",
+            "request": "launch",
+            "workdir": "${workspaceFolder}",
+            "program": "./skynet",
+            "config": "./examples/config_vsc",
+            "service": "./service"
+        }
+    ]  
+} 
