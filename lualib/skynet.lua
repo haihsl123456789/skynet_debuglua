@@ -584,7 +584,7 @@ skynet.trash = assert(c.trash)
 local function yield_call(service, session)
 	watching_session[session] = service
 	session_id_coroutine[session] = running_thread
-	local succ, msg, sz = coroutine_yield "SUSPEND"
+	local succ, msg, sz = coroutine_yield("SUSPEND")
 	watching_session[session] = nil
 	if not succ then
 		error "call failed"

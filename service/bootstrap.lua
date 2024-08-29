@@ -4,7 +4,7 @@ local service = require "skynet.service"
 require "skynet.manager"	-- import skynet.launch, ...
 
 skynet.start(function()
-	local standalone = skynet.getenv "standalone"
+	local standalone = skynet.getenv("standalone")
 
 	local launcher = assert(skynet.launch("snlua","launcher"))
 	skynet.name(".launcher", launcher)
@@ -41,7 +41,7 @@ skynet.start(function()
 	end
 	skynet.newservice "service_mgr"
 
-	local enablessl = skynet.getenv "enablessl"
+	local enablessl = skynet.getenv("enablessl")
 	if enablessl then
 		service.new("ltls_holder", function ()
 			local c = require "ltls.init.c"
@@ -49,6 +49,6 @@ skynet.start(function()
 		end)
 	end
 
-	pcall(skynet.newservice,skynet.getenv "start" or "main")
+	pcall(skynet.newservice,skynet.getenv("start") or "main")
 	skynet.exit()
 end)

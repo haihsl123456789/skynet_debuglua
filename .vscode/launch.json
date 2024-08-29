@@ -15,7 +15,7 @@
             "type": "cppdbg",                     // 使用的调试器类型  
             "request": "launch",                  // 启动请求  
             "program": "${workspaceFolder}/skynet", // 可执行文件路径，通常是编译后的输出  
-            "args": [],                           // 程序启动参数  
+            "args": ["./examples/config"],                           // 程序启动参数  
             // "stopAtEntry": false,                 // 启动时是否停在入口  
             "cwd": "${workspaceFolder}",          // 当前工作目录  
             // "environment": [],                     // 要传递给程序的环境变量  

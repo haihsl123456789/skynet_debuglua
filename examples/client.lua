@@ -12,6 +12,7 @@ local sproto = require "sproto"
 local host = sproto.new(proto.s2c):host("package")
 local request = host:attach(sproto.new(proto.c2s))
 
+
 local fd = assert(socket.connect("127.0.0.1", 8888))
 
 local function send_package(fd, pack)
