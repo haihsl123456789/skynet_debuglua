@@ -6,7 +6,8 @@ logservice = "snlua"
 logpath = "."
 harbor = 0
 -- start = "testvscdebug"	-- main script
-start = "main"	-- main script
+-- start = "main"	-- main script
+start = "main_mysql"	-- main script
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
 
 luaservice = root.."service/?.lua;"..root.."test/?.lua;"..root.."examples/?.lua;"..root.."test/?/init.lua"

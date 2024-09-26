@@ -142,7 +142,7 @@ skynet.start(function()
 		port=3306,
 		database="skynet",
 		user="root",
-		password="123456",
+		password="121212",
                 charset="utf8mb4",
 		max_packet_size = 1024 * 1024,
 		on_connect = on_connect
@@ -163,6 +163,12 @@ skynet.start(function()
 
 	res = db:query("select * from cats order by id asc")
 	print ( dump( res ) )
+
+    -- local stmt = db:prepare("SELECT * FROM cats WHERE name=?")
+    -- print ( "test4 prepare result=",dump( stmt ) )
+	-- local res = db:execute(stmt,'Bob')
+    -- print ( "test4 query result=",dump( res ) )
+    -- db:stmt_close(stmt)
 
 	-- 测试存储过程和二进制blob
 	test_sp_blob(db)

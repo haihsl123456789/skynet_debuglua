@@ -1,17 +1,22 @@
 include "config.path"
 
 -- preload = "./examples/preload.lua"	-- run preload.lua before every lua service run
-thread = 8
+thread = 4
 
--- logger = "vscdebuglog"
--- logservice = "snlua"
-logger = nil
+logger = "vscdebuglog"
+logservice = "snlua"
+-- logger = nil
 
 logpath = "."
 harbor = 1
 address = "127.0.0.1:2526"
 master = "127.0.0.1:2013"
-start = "main"	-- main script
+
+-- start = "main"	-- main script
+start = "tmain_call"	-- main script
+-- start = "tmain01"	-- main script
+-- start = "main_mysql"	-- main script
+
 -- start = "testsocket"	-- main script
 -- start = "main_sproto"	-- main script
 bootstrap = "snlua bootstrap"	-- The service for bootstrap
