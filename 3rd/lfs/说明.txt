@@ -1,0 +1,13 @@
+luafilesystem第三方库
+
+Git地址:
+https://github.com/keplerproject/luafilesystem/tree/master
+
+当前使用版本:
+1.8.0
+
+使用：
+	1. cd到当前目录
+	2. make
+	3. cd src
+	4. mv lfs.so ../../

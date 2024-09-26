@@ -5,10 +5,12 @@ local log = require "log"
 local const=require "const"
 local debugEx=require "debugEx"
 
---local test_lhb = require "test_lhb"    
+local test = require "test"  
     
 skynet.start(function()
 	skynet.error("Server start")
+
+	test.test()
 
 	local proto=skynet.uniqueservice("protoloader")
 	skynet.call(proto, "lua", "load", {
@@ -30,3 +32,5 @@ skynet.start(function()
 
 	skynet.exit()
 end)
+
+

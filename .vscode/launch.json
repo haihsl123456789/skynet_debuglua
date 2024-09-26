@@ -2,6 +2,15 @@
     "version": "0.2.0",  
     "configurations": [  
         {
+            "name": "fish",
+            "type": "lua",
+            "request": "launch",
+            "workdir": "${workspaceFolder}",
+            "program": "./skynet",
+            "config": "./config",
+            "service": "./service"
+        },        
+        {
             "name": "lua debug",
             "type": "lua",
             "request": "launch",

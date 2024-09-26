@@ -6,6 +6,8 @@ function log.debug(fmt, ...)
 --	print(os.date("%Y.%m.%d_%X " )..string.format(fmt, ...))
 end
 
+
+
 function log.console(fmt, ...)
 	print(os.date("%Y.%m.%d_%X " )..string.format(fmt, ...))
 end
@@ -180,5 +182,24 @@ function log.__call(self, ...)
 		self.format(...)
 	end
 end
+
+
+
+function log.printdump(obj,str )
+    if str then
+        log.normal(str)
+    end
+    log.normal( log.dump(obj) )
+end
+
+function log.Println(...)
+    skynet.error(os.date("%Y.%m.%d_%X " ), ...)
+end
+
+function log.Fatalln(...)
+    skynet.error(os.date("%Y.%m.%d_%X " ), ...)
+    assert(false, "log.Fatalln")
+end
+
 
 return setmetatable(log, log)
