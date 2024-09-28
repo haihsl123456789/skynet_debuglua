@@ -1,4 +1,5 @@
 local log = require "log"
+local config = require "cfgjson"
 local math = math
 
 local _this = {}
@@ -49,9 +50,8 @@ function _this.NewFish(id , fishtypeid , maketime )
 	ret.FishId = id
 	ret.FishTypeId = fishtypeid
 
-	var ok bool
-	ret.Config, ok = config.GetFish().FishMap[fishtypeid]
-	if !ok then
+	ret.Config = config.GetFish().FishMap[fishtypeid]
+	if ret.Config ~= nil then
 		log.Println("NewFish: fishtypeid:", fishtypeid)
     end
 	-- self.FishPostion =

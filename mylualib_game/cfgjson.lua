@@ -125,29 +125,29 @@ end
 
 local jsoncfg = {}  --JsonConfig
 
-function GetFish() --*FishConfig         
+function jsoncfg.GetFish() --*FishConfig         
     return jsoncfg.Fish[1] 
 end    
 
-function GetTrack(id ) --*TrackConfig 
+function jsoncfg.GetTrack(id ) --*TrackConfig 
     return jsoncfg.Track[id] 
 end
 
-function GetTide(id ) --*TideConfig   
+function jsoncfg.GetTide(id ) --*TideConfig   
     return jsoncfg.Tide[id] 
 end
 
-function GetFree(id ) --*FreeConfig   
+function jsoncfg.GetFree(id ) --*FreeConfig   
     return jsoncfg.Free[id] 
 end
 
-function GetTrackTime(id ) --int      
-    return GetTrack(id).Time 
+function jsoncfg.GetTrackTime(id ) --int      
+    return jsoncfg.GetTrack(id).Time 
 end
 
-function GetFishMapping(editid ) --int 
+function jsoncfg.GetFishMapping(editid ) --int 
 	local ret = jsoncfg.FishMapping[editid]
-	if not ret then
+	if ret == nil then
 		log.Fatalln("GetFishMapping :", editid)
     end
 	return ret
