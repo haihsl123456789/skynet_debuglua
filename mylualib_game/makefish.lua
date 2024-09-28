@@ -100,8 +100,8 @@ function _M:newFreeFish(cfg --[[*config.SFreeConfig]], beginTime ) -- []*Fish {
     for i = 1, makecnt do
 		local fish = mfish.NewFish(self:OwnerDesk().MakeFishId(), config.GetFishMapping(cfg.FishTypeId), beginTime+cfg.IntervalTime*i)
 		local pos = {} --Point
-		pos.X = (getrandx(cfg.XOffsets))*1.0  -- to float
-		pos.Y = (getrandx(cfg.YOffsets))*1.0  -- to float
+		pos.X = (getrandx(cfg.XOffsets))+0.0  -- to float
+		pos.Y = (getrandx(cfg.YOffsets))+0.0  -- to float
 		fish:SetTrack(cfg.TrackIds[myrand.Intn(0, #cfg.TrackIds)], pos)
         table.insert(fishs, fish)
     end
