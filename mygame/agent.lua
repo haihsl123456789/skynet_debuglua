@@ -29,7 +29,12 @@ end
 
 function REQUEST:Login()
 	print("Login", self.username, self.password)
-	return { result = 0, pid = 123, token = "token_xx"}
+	--todo check username password 
+
+	--
+	local pid = 123
+	local session = skynet.call("sessionmgr", "lua", "AddSession", pid)
+	return { result = 0, pid = pid, token = session}
 end
 
 function REQUEST:LoginGame()

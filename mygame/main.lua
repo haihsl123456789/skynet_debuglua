@@ -10,7 +10,7 @@ local test = require "test"
 skynet.start(function()
 	skynet.error("Server start")
 
-	test.test()
+	-- test.test()
 	
 	local proto=skynet.uniqueservice("protoloader")
 	skynet.call(proto, "lua", "load", {
@@ -21,6 +21,9 @@ skynet.start(function()
 		local console = skynet.newservice("console")
 	end
 	skynet.newservice("debug_console", 8001)
+	
+	-- skynet.uniqueservice("playermgr")
+	skynet.uniqueservice("sessionmgr")
 
 	local watchdog = skynet.newservice("watchdog")
 	skynet.call(watchdog, "lua", "start", {
