@@ -119,9 +119,9 @@ LoginGame  200{
 	request {
 		token 0 : string
 		
-		gameId 1 : integer
-		roomId 2 : integer
-		clubId 3 : integer
+		#gameId 1 : integer
+		#roomId 2 : integer
+		#clubId 3 : integer
 		deskId 4 : integer
 	}
 	response {

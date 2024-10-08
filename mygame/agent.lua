@@ -2,6 +2,7 @@ local skynet = require "skynet"
 local socket = require "skynet.socket"
 local sproto = require "sproto"
 local sprotoloader = require "sprotoloader"
+local log = require "log"
 
 local WATCHDOG
 local host
@@ -24,6 +25,31 @@ end
 
 function REQUEST:handshake()
 	return { msg = "Welcome to skynet, I will send heartbeat every 5 sec." }
+end
+
+function REQUEST:Login()
+	print("Login", self.username, self.password)
+	return { result = 0, pid = 123, token = "token_xx"}
+end
+
+function REQUEST:LoginGame()
+	log.printdump(self, "LoginGame")
+	return { ret = 0}
+end
+
+function REQUEST:SetBullet()
+	log.printdump(self, "SetBullet")
+	return { ret = 0}
+end
+
+function REQUEST:Fire()
+	log.printdump(self, "Fire")
+	-- return { ret = 0}
+end
+
+function REQUEST:CollideFish()
+	log.printdump(self, "CollideFish")
+	-- return { ret = 0}
 end
 
 function REQUEST:quit()

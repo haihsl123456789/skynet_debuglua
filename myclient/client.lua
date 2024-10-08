@@ -1,16 +1,57 @@
 package.cpath = "luaclib/?.so"
-package.path = "lualib/?.lua;examples/?.lua"
+package.path = "lualib/?.lua;examples/?.lua;myclient/?.lua"
 
 if _VERSION ~= "Lua 5.4" then
 	error "Use lua 5.4"
 end
 
+local log = require "log"
 local socket = require "client.socket"
-local proto = require "proto"
-local sproto = require "sproto"
+-- local proto = require "proto"
+-- local sproto = require "sproto"
 
-local host = sproto.new(proto.s2c):host("package")
-local request = host:attach(sproto.new(proto.c2s))
+------
+-- local skynet = require "skynet"
+local sprotoparser = require "sprotoparser"
+local sprotoloader = require "sprotoloader"
+-- local log = require "log"
+
+local loader = {}
+local data = {}
+
+local function load(name)
+	local filename = string.format("myproto/%s.sproto", name)
+	local f = assert(io.open(filename), "Can't open " .. filename)
+	local t = f:read "a"
+	f:close()
+	return sprotoparser.parse(t)
+end
+
+function loader.load(list)
+	for i, name in ipairs(list) do
+		local p = load(name)
+		-- log("load proto [%s] in slot %d", name, i)
+		data[name] = i
+		sprotoloader.save(p, i)
+	end
+end
+
+function loader.index(name)
+	return data[name]
+end
+
+loader.load( {
+	"game.c2s",
+	"game.s2c",
+})
+
+----
+
+local host = sprotoloader.load(2):host "package"
+local request = host:attach(sprotoloader.load(1))
+
+-- local host = sproto.new(proto.s2c):host("package")
+-- local request = host:attach(sproto.new(proto.c2s))
 
 
 local fd = assert(socket.connect("127.0.0.1", 5000))
@@ -51,11 +92,16 @@ end
 
 local session = 0
 
+local saveReqs = {}
+
 local function send_request(name, args)
 	session = session + 1
+	
+	saveReqs[session] = {name=name,args=args}
+
 	local str = request(name, args, session)
 	send_package(fd, str)
-	print("Request:", session)
+	print("Request:", session, name, log.dump(args))
 end
 
 local last = ""
@@ -69,8 +115,8 @@ local function print_request(name, args)
 	end
 end
 
-local function print_response(session, args)
-	print("RESPONSE", session)
+local function print_response(session, args, name)
+	print("RESPONSE--", name)
 	if args then
 		for k,v in pairs(args) do
 			print(k,v)
@@ -80,10 +126,27 @@ end
 
 local function print_package(t, ...)
 	if t == "REQUEST" then
-		print_request(...)
+		local name, args = ...
+		print_request(name, args)
 	else
+		local session, args = ...
 		assert(t == "RESPONSE")
-		print_response(...)
+
+		local name =  saveReqs[session] and saveReqs[session].name
+
+		print_response(session, args, name)
+
+		if name == "Login" then
+			if args.result == 0 then
+				send_request("LoginGame", {token="tokenxx",deskId=112 })		
+			end
+		elseif name == "LoginGame" then			
+			if args.ret == 0 then
+				send_request("Fire", {bulletType=1, bulletTimes=2,direction={x=1,y=2}, targetFishId=0})		
+			end
+		end
+
+		saveReqs[session] = nil
 	end
 end
 
@@ -107,6 +170,8 @@ while true do
 	if cmd then
 		if cmd == "quit" then
 			send_request("quit")
+		elseif cmd == "login" then
+			send_request("Login", {username="jack", password="pw123"})			
 		else
 			send_request("get", { what = cmd })
 		end

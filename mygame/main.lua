@@ -11,7 +11,7 @@ skynet.start(function()
 	skynet.error("Server start")
 
 	test.test()
-
+	
 	local proto=skynet.uniqueservice("protoloader")
 	skynet.call(proto, "lua", "load", {
 		"game.c2s",

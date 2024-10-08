@@ -1,6 +1,15 @@
 ## fork from
     https://github.com/colinsusie/skynetda
     install vscode ex: Skynet Debugger (colin)
+
+    example:
+        ./skynet ./example/config 
+        ./3rd/lua/lua ./example/client.lua
+
+    fish:
+        ./skynet ./config
+        ./3rd/lua/lua ./myclient/client.lua
+
 ## ![skynet logo](https://github.com/cloudwu/skynet/wiki/image/skynet_metro.jpg)
 
 Skynet is a lightweight online game framework which can be used in many other fields.
