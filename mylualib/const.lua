@@ -18,4 +18,10 @@ const.FishType = {
     FTBomb  = 6     , 
 }
 
+const.Ret = {
+    Ok = 0,
+    SessionError = 1,
+    Error = 100,
+}
+
 return const

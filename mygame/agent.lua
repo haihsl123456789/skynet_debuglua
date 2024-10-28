@@ -3,6 +3,7 @@ local socket = require "skynet.socket"
 local sproto = require "sproto"
 local sprotoloader = require "sprotoloader"
 local log = require "log"
+local const = require "const"
 
 local WATCHDOG
 local host
@@ -10,7 +11,8 @@ local send_request
 
 local CMD = {}
 local REQUEST = {}
-local client_fd
+
+local ctx = {pid = 0, fd = 0}
 
 function REQUEST:get()
 	print("get", self.what)
@@ -33,13 +35,23 @@ function REQUEST:Login()
 
 	--
 	local pid = 123
+	--
+	ctx.pid = pid
+
 	local session = skynet.call("sessionmgr", "lua", "AddSession", pid)
 	return { result = 0, pid = pid, token = session}
 end
 
 function REQUEST:LoginGame()
 	log.printdump(self, "LoginGame")
-	return { ret = 0}
+
+	local pid = skynet.call("sessionmgr", "lua", "GetPid", self.token)
+	if pid ==0 then
+		return {ret=const.Ret.SessionError}	 --session error
+	end
+
+	local ret = skynet.call("gamemgr", "lua", "LoginGame",  ctx)
+	return { ret = ret}
 end
 
 function REQUEST:SetBullet()
@@ -58,7 +70,7 @@ function REQUEST:CollideFish()
 end
 
 function REQUEST:quit()
-	skynet.call(WATCHDOG, "lua", "close", client_fd)
+	skynet.call(WATCHDOG, "lua", "close", ctx.fd)
 end
 
 local function request(name, args, response)
@@ -71,7 +83,7 @@ end
 
 local function send_package(pack)
 	local package = string.pack(">s2", pack)
-	socket.write(client_fd, package)
+	socket.write(ctx.fd, package)
 end
 
 skynet.register_protocol {
@@ -81,7 +93,7 @@ skynet.register_protocol {
 		return host:dispatch(msg, sz)
 	end,
 	dispatch = function (fd, _, type, ...)
-		assert(fd == client_fd)	-- You can use fd to reply message
+		assert(fd == ctx.fd)	-- You can use fd to reply message
 		skynet.ignoreret()	-- session is fd, don't call skynet.ret
 		skynet.trace()
 		if type == "REQUEST" then
@@ -114,7 +126,7 @@ function CMD.start(conf)
 		end
 	end)
 
-	client_fd = fd
+	ctx.fd = fd
 	skynet.call(gate, "lua", "forward", fd)
 end
 

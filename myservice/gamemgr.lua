@@ -1,12 +1,12 @@
 local skynet = require "skynet"
 require "skynet.manager"	-- import skynet.register
 local log = require "log"
+local const = require "const"
 
 
 local _this = {
     IdDeskMap    = {},
 	PidDeskIdMap = {},
-	ConPipMap    = {},
 }
 
 function _this:GetIdDeskMap(id ) --(*Desk, bool) 
@@ -34,19 +34,36 @@ function _this:DelPidDeskIdMap(id )
     self.PidDeskIdMap[id] = nil
 end
 
-function _this:GetConPipMap(con ) --(int, bool) 
-	return self.ConPipMap[con]
+
+------------------------------------
+
+
+
+
+
+
+
+
+
+------------------------------------
+function _this:LoginGame(req, ctx ) 
+	local pid = ctx.pid
+	local fd = ctx.fd
+
+	local deskId = self:GetPidDeskIdMap(ctx.pid)
+	if deskId == nil then
+		local desk = skynet.newservice("desk")
+		deskId = skynet.call(desk, "lua", "GetDeskId")
+
+		self:SetIdDeskMap(deskId, desk) 
+	end
+	local desk = self:GetIdDeskMap(deskId)
+	local result = skynet.call(desk, "lua", "AddPlayer", pid, fd)
+	if result == const.Ret.Ok then
+		self:SetPidDeskIdMap(pid, deskId)
+	end
+	return result
 end
-
-function _this:SetConPipMap(con , pid ) 
-	self.ConPipMap[con] = pid
-end
-
-function _this:DelConPipMap(con ) 
-    self.ConPipMap[con] = nil
-end
-
-
 
 skynet.start(function()
 

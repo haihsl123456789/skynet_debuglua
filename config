@@ -8,9 +8,9 @@ lua_cpath = root .. "luaclib/?.so"
 -- preload = "./examples/preload.lua"	-- run preload.lua before every lua service run
 thread = 2
 
--- logger = "vscdebuglog"
--- logservice = "snlua"
-logger = nil
+logger = "vscdebuglog"
+logservice = "snlua"
+-- logger = nil
 
 logpath = "."
 harbor = 1

@@ -22,8 +22,8 @@ skynet.start(function()
 	end
 	skynet.newservice("debug_console", 8001)
 	
-	-- skynet.uniqueservice("playermgr")
 	skynet.uniqueservice("sessionmgr")
+	skynet.uniqueservice("gamemgr")
 
 	local watchdog = skynet.newservice("watchdog")
 	skynet.call(watchdog, "lua", "start", {

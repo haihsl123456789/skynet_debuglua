@@ -185,11 +185,20 @@ end
 
 
 
-function log.printdump(obj,str )
-    if str then
-        log.normal(str)
+-- function log.printdump(obj,str )
+--     if str then
+--         log.normal(str)
+--     end
+--     log.normal( log.dump(obj) )
+-- end
+
+local tostring = require "tostring"
+function log.printdump(...)
+	local s = ""
+    for _, v in ipairs({...}) do
+        s = s .. tostring(v)
     end
-    log.normal( log.dump(obj) )
+	print(s)
 end
 
 function log.Println(...)

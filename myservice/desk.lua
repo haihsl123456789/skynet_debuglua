@@ -1,7 +1,15 @@
+local skynet = require "skynet"
+require "skynet.manager"
+
 local log = require "log"
 local config = require "cfgjson"
 local math = math
 local mytime = require "mytime"
+local myrand = require "myrand"
+local log = require "log"
+local bullet = require "bullet"
+local alghelper = require "alghelper"
+local makefish = require "makefish"
 
 local _this = {}
 local _M = {}
@@ -18,8 +26,8 @@ local _M = {}
 -- 	Status       int
 -- 	SceneId      int
 
--- 	mainloopticker *time.Ticker
--- 	savedbticker   *time.Ticker
+-- 	mainloopCancel *time.Ticker
+-- 	savedbCancel   *time.Ticker
 
 -- 	fishmakeid    int32 --for make
 -- 	bulletmakeid  int32 --for make
@@ -49,6 +57,22 @@ local	C_CHANGESCENE_TIME = 2000
 -- 	return self.ComMap["make"].(*MakeComponent)
 -- }
 
+local function start_timer(interval, my_timer_task)  
+	local isrun = true
+	local function cancel()
+		isrun = false
+	end
+    local function timer()  
+        my_timer_task()  
+		if isrun then
+        	skynet.timeout(interval, timer)  
+		end
+    end  
+    skynet.timeout(interval, timer)  
+
+	return cancel
+end
+
 function NewDesk(deskid ) --*Desk {
 	local ret = {
 
@@ -62,18 +86,18 @@ function NewDesk(deskid ) --*Desk {
 	ret.PosPlayerMap = {} --make(map[int]*Player)
 	ret.IdBulletMap = {} -- make(map[int]*Bullet)
 
-	ret.AddCom(NewComponent("make", this))
+	ret.ComMake = makefish.NewMakeComponect(ret)
 	--
 	local freeFishIds = {21, 22, 23}
 	local tideFishIds = {1, 2, 3}
-	ret.ComMake().Init(freeFishIds, tideFishIds)
+	ret.ComMake:Init(freeFishIds, tideFishIds)
 
 	ret.GotoStepFree()
 	--
-	ret.mainloopticker = time.NewTicker(time.Millisecond * 250)
-	ret.savedbticker = time.NewTicker(time.Second * 10)
+	ret.mainloopCancel = start_timer(25, ret.mainloop)
+	ret.savedbCancel = start_timer(1, ret.savedb)
 	-- go ret.msgloop()
-
+	
 	return ret
 end
 
@@ -100,10 +124,10 @@ end
 function _M:msgloop() 
 	while true do
 		-- select {
-		-- case <-self.mainloopticker.C:
+		-- case <-self.mainloopCancel.C:
 		-- 	self.mainloop()
-		-- case dbt := <-self.savedbticker.C:
-		-- 	fmt.Println("save db ticker:", dbt)
+		-- case dbt := <-self.savedbCancel.C:
+		-- 	log.printdump("save db ticker:", dbt)
 		-- 	self.savedb()
 		-- case data := <-self.Rpc.Msg:
 		-- 	self.Rpc.MsgHandle(data)
@@ -113,76 +137,76 @@ end
 
 function _M:mainloop() 
 	if self.step == STEP_FREE then
-		local isEnd, fishes = self.ComMake().MakeFish(mytime.GetTime())
-		self.AddFishes(fishes)
+		local isEnd, fishes = self.ComMake:MakeFish(mytime.GetTime())
+		self:AddFishes(fishes)
 		if isEnd then
-			self.GotoStepChangeScene()
+			self:GotoStepChangeScene()
         end
 	elseif self.step == STEP_CHANGE_SCENE then
 		if mytime.GetTime()-self.stepBeginTime > C_CHANGESCENE_TIME then
-			self.GotoStepFree()
+			self:GotoStepFree()
         end
 	end
 
 	--5秒清一次鱼
-	self.UpdateFish()
-	self.UpdateBullet()
-	self.UpdatePlayer()
+	self:UpdateFish()
+	self:UpdateBullet()
+	self:UpdatePlayer()
 end
 
 function _M:savedb() 
 	log.Println("save db")
-	for pid, player := range self.IdPlayerMap do
-		win, lose, fee := player.Payout()
-		go gamesavedb(pid, win, lose, fee, 10, 60)
-    end
+	-- for pid, player := range self.IdPlayerMap do
+	-- 	win, lose, fee := player.Payout()
+	-- 	go gamesavedb(pid, win, lose, fee, 10, 60)
+    -- end
 end
 
 function _M:UpdateFish() 
-	curtime := mytime.GetTime()
-	for id, fish := range self.IdFishMap do
-		utils.Assert(id == fish.FishId)
-		if fish.IsOutTime(curtime) then
-			self.DelFish(id)
+	local curtime = mytime.GetTime()
+	for id, fish in pairs( self.IdFishMap) do
+		assert(id == fish.FishId)
+		if fish:IsOutTime(curtime) then
+			self:DelFish(id)
 		else 
-			fish.Update(curtime)
+			fish:Update(curtime)
         end
 	end
 end
 
 function _M:UpdateBullet() 
-	curtime := mytime.GetTime()
-	reason := "UpdateBullet:outtime:"
-	for id, bullet := range self.IdBulletMap do
-		utils.Assert(id == bullet.BulletId)
-		if bullet.IsOutTime(curtime) then
-			self.DelBullet(id, reason)
+	local curtime = mytime.GetTime()
+	local reason = "UpdateBullet:outtime:"
+	for id, bullet in pairs(  self.IdBulletMap) do
+		assert(id == bullet.BulletId)
+		if bullet:IsOutTime(curtime) then
+			self:DelBullet(id, reason)
 		else 
-			bullet.Update(curtime)
+			bullet:Update(curtime)
         end
 	end
 end
 
 function _M:UpdatePlayer() 
-	curtime := mytime.GetTime()
-	for id, player := range self.IdPlayerMap do
-		utils.Assert(id == player.PlayerId)
-		player.Update(curtime)
+	local curtime = mytime.GetTime()
+	for id, player in pairs( self.IdPlayerMap) do
+		assert(id == player.PlayerId)
+		player:Update(curtime)
     end
 end
 
 function _M:GetIdlePostion() --int {
-	for seat := 0; seat < C_MAX_SEAT; seat++ do
-		_, ok := self.PosPlayerMap[seat]
-		if !ok then
+	for seat = 0, C_MAX_SEAT-1 do
+		local p = self.PosPlayerMap[seat]
+		if p == nil then
 			return seat
         end
 	end
 	return ERR_SEAT
 end
 
-function _M:AddPlayer(player *Player) --int {
-	pos := self.GetIdlePostion()
+function _M:AddPlayer(player) --int {
+	local pos = self:GetIdlePostion()
 	if pos == ERR_SEAT then
 		log.Println("pos == ERR_SEAT@@@@@@@@@@@@@@@@@@", pos)
 		return ERR_FISH_NO_SEAT
@@ -200,19 +224,19 @@ function _M:AddPlayer(player *Player) --int {
 	return 0
 end
 
-function _M:DelPlayer(playerId int) --int {
-	pPlayer, ok := self.IdPlayerMap[playerId]
-	if ok then
+function _M:DelPlayer(playerId ) --int {
+	local pPlayer = self.IdPlayerMap[playerId]
+	if pPlayer ~= nil then
 		--清除玩家身上的子弹
-		IdBulletSet := pPlayer.IdBulletSet
-		reason := "delPlayer:"
-		reason += string(playerId)
-		for bulletid, _ := range IdBulletSet do
-			self.DelBullet(bulletid, reason)
+		local IdBulletSet = pPlayer.IdBulletSet
+		local reason = "delPlayer:"
+		reason = reason .. string(playerId)
+		for bulletid in pairs( IdBulletSet) do
+			self:DelBullet(bulletid, reason)
         end
 
-		delete(self.PosPlayerMap, pPlayer.Position)
-		delete(self.IdPlayerMap, pPlayer.PlayerId)
+		self.PosPlayerMap[pPlayer.Position] = nil
+		self.IdPlayerMap[pPlayer.PlayerId] = nil
 
 		-- TablePlayerInfoEvent msg;
 		-- getInDeskFishPlayerMap(msg.fishPlayerInfo);
@@ -221,91 +245,91 @@ function _M:DelPlayer(playerId int) --int {
 	return 0
 end
 
-function _M:AddBullet(pid int, pBullet *Bullet) 
-	pPlayer, ok := self.IdPlayerMap[pid]
-	utils.Assert(ok)
+function _M:AddBullet(pid , pBullet ) 
+	local pPlayer = self.IdPlayerMap[pid]
+	assert(pPlayer~=nil)
 	pBullet.SetOwerInfo(pid, pPlayer.Position)
 
 	pPlayer.InsertBullet(pBullet.BulletId)
 	self.IdBulletMap[pBullet.BulletId] = pBullet
 end
 
-function _M:DelBullet(bulletid int, reason string) 
-	bullet, ok := self.IdBulletMap[bulletid]
-	if ok then
-		delete(self.IdBulletMap, bulletid)
-		playerid := bullet.OwerId
-		player, ok := self.IdPlayerMap[playerid]
-		if ok then
+function _M:DelBullet(bulletid , reason ) 
+	local bullet = self.IdBulletMap[bulletid]
+	if bullet ~= nil then
+		self.IdBulletMap[bulletid] = nil
+		local playerid = bullet.OwerId
+		local player = self.IdPlayerMap[playerid]
+		if player ~= nil then
 			player.RemoveBullet(bulletid)
-			fmt.Println("remove bullet", bulletid, reason)
+			log.printdump("remove bullet", bulletid, reason)
         end
 	end
 end
 
-function _M:AddFishes(fishes []*Fish) 
-	if len(fishes) == 0 then
+function _M:AddFishes(fishes) 
+	if fishes == nil or #fishes == 0 then
 		return
     end
 
-	var msg protodata.FishesPush
-	msg.Fishes = make([]*protodata.Fish, 0, len(fishes))
+	local msg = {}
+	msg.Fishes = {}
 
-	for _, fish := range fishes do
-		self.AddFish(fish)
-		data := new(protodata.Fish)
-		fish.GetSendData(data)
-		msg.Fishes = append(msg.Fishes, data)
+	for _, fish in pairs( fishes) do
+		self:AddFish(fish)
+		local data = {}
+		fish:GetSendData(data)
+		table.insert(msg.Fishes, data)
     end
 
-	self.Broadcast(&msg)
+	self:Broadcast(msg)
 end
 
-function _M:AddFish(fish *Fish) 
+function _M:AddFish(fish ) 
 	self.IdFishMap[fish.FishId] = fish
 end
 
-function _M:DelFish(fishid int) 
+function _M:DelFish(fishid ) 
 	-- fish, ok := self.IdFishMap[fishid]
 	-- if ok {
-	delete(self.IdFishMap, fishid)
+	self.IdFishMap[fishid] = nil
 	-- }
 end
 
-function _M:DelFishes(fishes []*Fish) 
-	for _, fish := range fishes do
-		self.DelFish(fish.FishId)
+function _M:DelFishes(fishes ) 
+	for _, fish in pairs(fishes) do
+		self:DelFish(fish.FishId)
     end
 end
 
 function _M:GotoStepFree() 
 	self.stepBeginTime = mytime.GetTime()
 	self.step = STEP_FREE
-	self.ComMake().BeginFree(self.stepBeginTime)
+	self.ComMake:BeginFree(self.stepBeginTime)
 end
 
 function _M:GotoStepChangeScene() 
 	self.stepBeginTime = mytime.GetTime()
 	self.step = STEP_CHANGE_SCENE
 
-	self.ChangeFishEndLifeTime(self.stepBeginTime + C_CHANGESCENE_TIME)
+	self:ChangeFishEndLifeTime(self.stepBeginTime + C_CHANGESCENE_TIME)
 
 	self.SceneId = myrand.Intn(0, 5)
 
-	var msg protodata.ChangeScenePush
-	msg.Sceneid = int32(self.SceneId)
-	self.Broadcast(&msg)
+	local  msg = {} -- protodata.ChangeScenePush
+	msg.Sceneid = (self.SceneId)
+	self:Broadcast(msg)
 end
 
-function _M:ChangeFishEndLifeTime(endTime int) 
-	for _, fish := range self.IdFishMap do
-		fish.ChangeEndLifeTime(endTime)
+function _M:ChangeFishEndLifeTime(endTime ) 
+	for _, fish in pairs( self.IdFishMap) do
+		fish:ChangeEndLifeTime(endTime)
     end
 end
 
-function _M:Broadcast(pMsg interface{}) 
-	for _, player := range self.IdPlayerMap do
-		player.SendMsg(pMsg)
+function _M:Broadcast(pMsg ) 
+	for _, player in pairs( self.IdPlayerMap) do
+		player:SendMsg(pMsg)
     end
 end
 
@@ -313,67 +337,67 @@ end
 -- 	self.(*Desk).Fire(pid.(int), req.(*protodata.FireReq))
 -- end
 
-function _M:Fire(pid int, req *protodata.FireReq) 
-	player, ok := self.IdPlayerMap[pid]
-	if !ok then
+function _M:Fire(pid , req ) 
+	local player = self.IdPlayerMap[pid]
+	if player == nil then
 		return
     end
-	if !player.EnoughGold(int(req.BulletTimes)) then
+	if !player:EnoughGold((req.BulletTimes)) then
 		return
     end
-	player.SubGold(int(req.BulletTimes))
-	bullet := NewBullet(self.MakeBulletId(), int(req.BulletTimes), int(req.TargetFishId),
-		Point{float64(req.Direction.X), float64(req.Direction.Y)}, mytime.GetTime(), 1000*15)
-	bullet.SetOwerInfo(pid, player.Position)
-	self.AddBullet(pid, bullet)
+	player:SubGold((req.BulletTimes))
+	local bullet = bullet.NewBullet(self:MakeBulletId(), (req.BulletTimes), (req.TargetFishId),
+		{(req.Direction.X), (req.Direction.Y)}, mytime.GetTime(), 1000*15)
+	bullet:SetOwerInfo(pid, player.Position)
+	self:AddBullet(pid, bullet)
 
-	var msg protodata.FirePush
-	msg.Bullet = new(protodata.Bullet)
+	local msg = {} -- protodata.FirePush
+	msg.Bullet = {} -- new(protodata.Bullet)
 	bullet.GetSendData(msg.Bullet)
-	self.Broadcast(&msg)
+	self:Broadcast(msg)
 end
 
 -- func RPC_CollideFish(this interface{}, pid interface{}, req interface{}) {
 -- 	self.(*Desk).CollideFish(pid.(int), req.(*protodata.CollideFishReq))
 -- }
-function _M:CollideFish(pid int, req *protodata.CollideFishReq) 
-	player, ok := self.IdPlayerMap[pid]
-	if !ok then
+function _M:CollideFish(pid , req ) 
+	local player = self.IdPlayerMap[pid]
+	if player == nil then
 		log.Println("collide fish: no player")
 		return
     end
-	if len(req.AreaFishIds) == 0 then
+	if #req.AreaFishIds == 0 then
 		log.Println("collide fish: req.AreaFishIds) == 0")
 		return
     end
-	curTime := mytime.GetTime()
-	bullet, ok := self.IdBulletMap[int(req.BulletId)]
-	if !ok || bullet.IsOutTime(curTime) then
-		log.Println("collide fish: no bullet || bullet.IsOutTime(curTime)", ok)
+	local curTime = mytime.GetTime()
+	local bullet = self.IdBulletMap[(req.BulletId)]
+	if bullet == nil or bullet:IsOutTime(curTime) then
+		log.Println("collide fish: no bullet || bullet.IsOutTime(curTime)")
 		return
     end
-	fishid := int(req.AreaFishIds[0])
-	fish, ok := self.IdFishMap[fishid]
-	if !ok || !fish.IsInLifeTime(curTime) then
-		log.Println("collide fish: no fish || !fish.IsInLifeTime(curTime)", ok)
+	local fishid = (req.AreaFishIds[0])
+	local fish = self.IdFishMap[fishid]
+	if fish == nil or !fish:IsInLifeTime(curTime) then
+		log.Println("collide fish: no fish || !fish.IsInLifeTime(curTime)")
 		return
     end
-	if alghelper.AlgKillFish(bullet.BulletTimes, fish.FishTimes) then
-		getgold := fish.FishTimes * bullet.BulletTimes
-		player.AddGold(getgold)
-		self.DelFish(fishid)
+	if alghelper:AlgKillFish(bullet.BulletTimes, fish.FishTimes) then
+		local getgold = fish.FishTimes * bullet.BulletTimes
+		player:AddGold(getgold)
+		self:DelFish(fishid)
 
-		var msg protodata.CollideFishPush
+		local  msg = {} -- protodata.CollideFishPush
 		msg.BulletId = req.BulletId
-		msg.CollideFishId = int32(fishid)
-		msg.CatchFishes = make([]*protodata.CatchFishInfo, 0, 1)
-		catchinfo := new(protodata.CatchFishInfo)
-		catchinfo.FishId = int32(fishid)
-		catchinfo.FishTimes = int32(fish.FishTimes)
-		catchinfo.GetGold = int64(getgold)
-		msg.CatchFishes = append(msg.CatchFishes, catchinfo)
-		self.Broadcast(&msg)
+		msg.CollideFishId = (fishid)
+		msg.CatchFishes = {} -- make([]*protodata.CatchFishInfo, 0, 1)
+		local catchinfo = {} -- new(protodata.CatchFishInfo)
+		catchinfo.FishId = (fishid)
+		catchinfo.FishTimes = (fish.FishTimes)
+		catchinfo.GetGold = (getgold)
+		table.insert(msg.CatchFishes, catchinfo)
+		self:Broadcast(msg)
     end
 
-	self.DelBullet(int(req.BulletId), "collide")
+	self:DelBullet((req.BulletId), "collide")
 end
