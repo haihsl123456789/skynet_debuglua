@@ -60,14 +60,15 @@ local	C_CHANGESCENE_TIME = 2000
 -- 	return self.ComMap["make"].(*MakeComponent)
 -- }
 
-local function start_timer(interval, my_timer_task)  
+local function start_timer(interval, my_timer_task,...)  
 	local isrun = true
 	local function cancel()
 		isrun = false
 	end
+	local paras = {...}
     local function timer()  
-        my_timer_task()  
 		if isrun then
+        	my_timer_task(table.unpack(paras))  
         	skynet.timeout(interval, timer)  
 		end
     end  
@@ -87,6 +88,9 @@ function NewDesk(deskid) --*Desk {
 	ret.IdPlayerMap = {} --make(map[int]*Player)
 	ret.PosPlayerMap = {} --make(map[int]*Player)
 	ret.IdBulletMap = {} -- make(map[int]*Bullet)
+	ret.bulletmakeid = 0
+	ret.fishmakeid = 0
+	ret.debug = 0
 
 	ret.ComMake = makefish.NewMakeComponect(ret)
 	--
@@ -96,8 +100,8 @@ function NewDesk(deskid) --*Desk {
 
 	ret:GotoStepFree()
 	--
-	ret.mainloopCancel = start_timer(25, ret.mainloop)
-	ret.savedbCancel = start_timer(1, ret.savedb)
+	ret.savedbCancel = start_timer(10, ret.savedb, ret)
+	ret.mainloopCancel = start_timer(10, ret.mainloop, ret)
 	-- go ret.msgloop()
 	
 	
@@ -138,7 +142,23 @@ function _M:msgloop()
 	end
 end
 
+
+function _M:savedb() 
+	log.Println("save db")
+	-- for pid, player := range self.IdPlayerMap do
+	-- 	win, lose, fee := player.Payout()
+	-- 	go gamesavedb(pid, win, lose, fee, 10, 60)
+    -- end
+end
+
+
 function _M:mainloop() 
+	log.Println("~~~~mainloop")
+	-- if self.debug <10 then
+	-- 	self.debug = self.debug + 1
+	-- 	return
+	-- end
+
 	if self.step == STEP_FREE then
 		local isEnd, fishes = self.ComMake:MakeFish(mytime.GetTime())
 		self:AddFishes(fishes)
@@ -155,14 +175,6 @@ function _M:mainloop()
 	self:UpdateFish()
 	self:UpdateBullet()
 	self:UpdatePlayer()
-end
-
-function _M:savedb() 
-	log.Println("save db")
-	-- for pid, player := range self.IdPlayerMap do
-	-- 	win, lose, fee := player.Payout()
-	-- 	go gamesavedb(pid, win, lose, fee, 10, 60)
-    -- end
 end
 
 function _M:UpdateFish() 
@@ -259,9 +271,9 @@ end
 function _M:AddBullet(pid , pBullet ) 
 	local pPlayer = self.IdPlayerMap[pid]
 	assert(pPlayer~=nil)
-	pBullet.SetOwerInfo(pid, pPlayer.Position)
+	pBullet:SetOwerInfo(pid, pPlayer.Position)
 
-	pPlayer.InsertBullet(pBullet.BulletId)
+	pPlayer:InsertBullet(pBullet.BulletId)
 	self.IdBulletMap[pBullet.BulletId] = pBullet
 end
 
@@ -272,7 +284,7 @@ function _M:DelBullet(bulletid , reason )
 		local playerid = bullet.OwerId
 		local player = self.IdPlayerMap[playerid]
 		if player ~= nil then
-			player.RemoveBullet(bulletid)
+			player:RemoveBullet(bulletid)
 			log.printdump("remove bullet", bulletid, reason)
         end
 	end
@@ -284,16 +296,16 @@ function _M:AddFishes(fishes)
     end
 
 	local msg = {}
-	msg.Fishes = {}
+	msg.fishes = {}
 
 	for _, fish in pairs( fishes) do
 		self:AddFish(fish)
 		local data = {}
 		fish:GetSendData(data)
-		table.insert(msg.Fishes, data)
+		table.insert(msg.fishes, data)
     end
 
-	self:Broadcast(msg)
+	self:Broadcast("FishesPush", msg)
 end
 
 function _M:AddFish(fish ) 
@@ -328,8 +340,8 @@ function _M:GotoStepChangeScene()
 	self.SceneId = myrand.Intn(0, 5)
 
 	local  msg = {} -- protodata.ChangeScenePush
-	msg.Sceneid = (self.SceneId)
-	self:Broadcast(msg)
+	msg.sceneid = (self.SceneId)
+	-- self:Broadcast("ChangeScenePush", msg)
 end
 
 function _M:ChangeFishEndLifeTime(endTime ) 
@@ -338,9 +350,9 @@ function _M:ChangeFishEndLifeTime(endTime )
     end
 end
 
-function _M:Broadcast(pMsg ) 
+function _M:Broadcast(msgName, pMsg ) 
 	for _, player in pairs( self.IdPlayerMap) do
-		player:SendMsg(pMsg)
+		player:SendMsg(msgName, pMsg)
     end
 end
 
@@ -353,19 +365,19 @@ function _M:Fire(pid , req )
 	if player == nil then
 		return
     end
-	if not player:EnoughGold((req.BulletTimes)) then
+	if not player:EnoughGold((req.bulletTimes)) then
 		return
     end
-	player:SubGold((req.BulletTimes))
-	local bullet = bullet.NewBullet(self:MakeBulletId(), (req.BulletTimes), (req.TargetFishId),
-		{(req.Direction.X), (req.Direction.Y)}, mytime.GetTime(), 1000*15)
+	player:SubGold((req.bulletTimes))
+	local bullet = bullet.NewBullet(self:MakeBulletId(), (req.bulletTimes), (req.targetFishId),
+		{(req.direction.X), (req.direction.Y)}, mytime.GetTime(), 1000*15)
 	bullet:SetOwerInfo(pid, player.Position)
 	self:AddBullet(pid, bullet)
 
 	local msg = {} -- protodata.FirePush
-	msg.Bullet = {} -- new(protodata.Bullet)
-	bullet.GetSendData(msg.Bullet)
-	self:Broadcast(msg)
+	msg.bullet = {} -- new(protodata.Bullet)
+	bullet:GetSendData(msg.bullet)
+	self:Broadcast("FirePush", msg)
 end
 
 -- func RPC_CollideFish(this interface{}, pid interface{}, req interface{}) {
@@ -399,15 +411,15 @@ function _M:CollideFish(pid , req )
 		self:DelFish(fishid)
 
 		local  msg = {} -- protodata.CollideFishPush
-		msg.BulletId = req.BulletId
-		msg.CollideFishId = (fishid)
-		msg.CatchFishes = {} -- make([]*protodata.CatchFishInfo, 0, 1)
+		msg.bulletId = req.BulletId
+		msg.collideFishId = (fishid)
+		msg.catchFishes = {} -- make([]*protodata.CatchFishInfo, 0, 1)
 		local catchinfo = {} -- new(protodata.CatchFishInfo)
-		catchinfo.FishId = (fishid)
-		catchinfo.FishTimes = (fish.FishTimes)
-		catchinfo.GetGold = (getgold)
-		table.insert(msg.CatchFishes, catchinfo)
-		self:Broadcast(msg)
+		catchinfo.fishId = (fishid)
+		catchinfo.fishTimes = (fish.FishTimes)
+		catchinfo.getGold = (getgold)
+		table.insert(msg.catchFishes, catchinfo)
+		self:Broadcast("CollideFishPush", msg)
     end
 
 	self:DelBullet((req.BulletId), "collide")

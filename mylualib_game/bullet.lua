@@ -22,13 +22,13 @@ function _M:SetOwerInfo(pid , playerpostion )
 end
 
 function _M:GetSendData(data ) --*protodata.Bullet) 
-	data.TimeStamp = (self.MakeTime)
-	data.BulletId = (self.BulletId)
-	data.Direction = {X=(self.Direction.X), Y= (self.Direction.Y)}
-	data.BulletTimes = (self.BulletTimes)
-	data.TargetFishId = (self.TargetFishId)
-	data.BulletType = (self.BulletType)
-	data.Position = (self.OwerPosition)
+	data.timeStamp = (self.MakeTime)
+	data.bulletId = (self.BulletId)
+	data.direction = {X=(self.Direction.X), Y= (self.Direction.Y)}
+	data.bulletTimes = (self.BulletTimes)
+	data.targetFishId = (self.TargetFishId)
+	data.bulletType = (self.BulletType)
+	data.position = (self.OwerPosition)
 end
 
 function _M:IsOutTime(t )  

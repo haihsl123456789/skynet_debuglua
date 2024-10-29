@@ -406,7 +406,8 @@ function jsoncfg.Initcfgjson()
 	funMap["Tide"] = tideParse
 
 	parseDir("./jsondata")
-	log.printdump(jsoncfg, "jsoncfg:")
+	log.Println("parse json ok!!")
+	-- log.printdump(jsoncfg, "jsoncfg:")
 end
 
 

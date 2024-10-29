@@ -31,7 +31,7 @@ function _this.NewMakeComponect(en ) --Component {
 
             freeIds    = {}, --[]int
             curFreeId  = 0 ,
-            freeOffset = 0 ,
+            freeOffset = 1 ,
             baseTime   = 0 , --基准时间
             timelength = 0 , --时长        
     }
@@ -56,7 +56,7 @@ end
 function _M:BeginFree(t ) --{
 	self.curFreeId = self.freeIds[math.random(1, #self.freeIds)]
 	self.baseTime = t
-	self.freeOffset = 0
+	self.freeOffset = 1
 	local cfg = config.GetFree(self.curFreeId)
 	self.timelength = cfg.Time
 end
@@ -87,9 +87,9 @@ end
 
 local function getrandx(x ) --[]int) int {
 	if #x == 1 then
-		return x[0]
+		return x[1]
     elseif #x == 2 then
-		return myrand.Intn(x[0], x[1]+1)
+		return myrand.Intn(x[1], x[2]+1)
 	end
 	assert(false, "getrandx")
 	return 0
@@ -99,11 +99,11 @@ function _M:newFreeFish(cfg --[[*config.SFreeConfig]], beginTime ) -- []*Fish {
 	local fishs = {} --make([]*Fish, 0, 10)
 	local makecnt = myrand.Intn(cfg.MakeCntMin, cfg.MakeCntMax+1)
     for i = 1, makecnt do
-		local fish = mfish.NewFish(self:OwnerDesk().MakeFishId(), config.GetFishMapping(cfg.FishTypeId), beginTime+cfg.IntervalTime*i)
+		local fish = mfish.NewFish(self:OwnerDesk():MakeFishId(), config.GetFishMapping(cfg.FishTypeId), beginTime+cfg.IntervalTime*i)
 		local pos = {} --Point
 		pos.X = (getrandx(cfg.XOffsets))+0.0  -- to float
 		pos.Y = (getrandx(cfg.YOffsets))+0.0  -- to float
-		fish:SetTrack(cfg.TrackIds[myrand.Intn(0, #cfg.TrackIds)], pos)
+		fish:SetTrack(cfg.TrackIds[myrand.Intn(1, #cfg.TrackIds+1)], pos)
         table.insert(fishs, fish)
     end
 	return fishs

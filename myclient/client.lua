@@ -107,12 +107,7 @@ end
 local last = ""
 
 local function print_request(name, args)
-	print("REQUEST", name)
-	if args then
-		for k,v in pairs(args) do
-			print(k,v)
-		end
-	end
+	print("REQUEST", name, log.dump(args))
 end
 
 local function print_response(session, args, name)

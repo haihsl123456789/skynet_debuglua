@@ -44,6 +44,22 @@ function _this:SetBullet(req, ctx )
 end
 
 function _this:Fire(req, ctx ) 
+	local pid = ctx.pid
+	local fd = ctx.fd
+
+	local deskId =  self:GetPidDeskIdMap(pid)
+	if deskId == nil then
+		log.printdump("Fire : deskId == nil", pid)
+		return
+	end
+
+	local desk = self:GetIdDeskMap(deskId)
+	if desk == nil then
+		log.printdump("Fire : desk == nil", pid)
+		return
+	end
+
+	skynet.send(desk, "lua", "Fire", ctx.pid,req) 
 end
 
 function _this:CollideFish(req, ctx ) 
@@ -65,7 +81,7 @@ function _this:LoginGame(req, ctx )
 		PlayerId = pid,
 		Con = fd,
 	}
-	local result = skynet.call(desk, "lua", "AddPlayer", player_info)  --todo这里player传过去应该有点问题
+	local result = skynet.call(desk, "lua", "AddPlayer", player_info)
 	if result == const.Ret.Ok then
 		self:SetPidDeskIdMap(pid, deskId)
 	end
@@ -81,7 +97,7 @@ skynet.start(function()
 		if f then
 			skynet.ret(skynet.pack(f(_this, ...)))
 		else
-			log("playermgr Unknown command : [%s]", command)
+			log.printdump("playermgr Unknown command : ", command)
 			skynet.response()(false)
 		end
 	end)

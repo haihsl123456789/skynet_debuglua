@@ -55,7 +55,7 @@ function _this.NewFish(id , fishtypeid , maketime )
 		log.Println("NewFish: fishtypeid:", fishtypeid)
     end
 	-- self.FishPostion =
-	ret.FishTimes = math.random(ret.Config.TimesMin, ret.Config.TimesMax)
+	ret.FishTimes = math.random(ret.Config.timesMin, ret.Config.timesMax)
 	ret.MakeTime = maketime
     setmetatable(ret, {__index = _M})
 	return ret
@@ -70,11 +70,11 @@ function _M:SetTrack(trackId , trackOffset )
 end
 
 function _M:GetSendData(data ) 
-	data.TimeStamp = (self.MakeTime)
-	data.FishId = (self.FishId)
-	data.FishTypeId = (self.FishTypeId)
-	data.TrackId = (self.TrackId)
-	data.TrackOffset = self.TrackOffsest
+	data.timeStamp = (self.MakeTime)
+	data.fishId = (self.FishId)
+	data.fishTypeId = (self.FishTypeId)
+	data.trackId = (self.TrackId)
+	data.trackOffset = self.TrackOffsest
 end
 
 function _M:IsInLifeTime(t ) 
@@ -93,7 +93,7 @@ function _M:ChangeEndLifeTime(endLifeTime )
 end
 
 function _M:Update(curTime ) 
-	if not self.IsInLifeTime(curTime) then
+	if not self:IsInLifeTime(curTime) then
 		return
     end
 	--todo: update position

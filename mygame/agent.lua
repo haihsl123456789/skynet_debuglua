@@ -68,12 +68,13 @@ end
 
 function REQUEST:SetBullet()
 	log.printdump(self, "SetBullet")
-	local ret = skynet.send("gamemgr", "lua", "SetBullet",  self, ctx)
+	-- local ret = skynet.send("gamemgr", "lua", "SetBullet",  self, ctx)
 	-- return { ret = 0}
 end
 
 function REQUEST:Fire()
 	log.printdump(self, "Fire")
+	local ret = skynet.send("gamemgr", "lua", "Fire",  self, ctx)
 	-- return { ret = 0}
 end
 
