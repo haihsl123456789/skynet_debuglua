@@ -4,6 +4,10 @@ local sproto = require "sproto"
 local sprotoloader = require "sprotoloader"
 local log = require "log"
 local const = require "const"
+local db = require "db"
+local dbpool = require "dbpool"
+local config = require "config"
+local mydbpool = dbpool.NewPool(config.db, 10)
 
 local WATCHDOG
 local host
@@ -31,15 +35,22 @@ end
 
 function REQUEST:Login()
 	print("Login", self.username, self.password)
-	--todo check username password 
 
-	--
-	local pid = 123
-	--
-	ctx.pid = pid
+    --todo check username password
+	local dbcon = mydbpool:getCon()
+	if db:checkAccount(dbcon, self.username, self.password) == false then
+		mydbpool:putCon(dbcon)
 
-	local session = skynet.call("sessionmgr", "lua", "AddSession", pid)
-	return { result = 0, pid = pid, token = session}
+		return { result = const.Ret.SessionError}
+	end
+	mydbpool:putCon(dbcon)
+    --
+
+    local pid = 123
+    ctx.pid = pid
+    local session = skynet.call("sessionmgr", "lua", "AddSession", pid)
+	
+    return { result = 0, pid = pid, token = session }
 end
 
 function REQUEST:LoginGame()

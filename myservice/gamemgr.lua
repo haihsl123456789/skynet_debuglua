@@ -2,6 +2,7 @@ local skynet = require "skynet"
 require "skynet.manager"	-- import skynet.register
 local log = require "log"
 local const = require "const"
+local player = require "player"
 
 
 local _this = {
@@ -44,21 +45,21 @@ end
 
 
 
-
 ------------------------------------
+
 function _this:LoginGame(req, ctx ) 
 	local pid = ctx.pid
 	local fd = ctx.fd
 
-	local deskId = self:GetPidDeskIdMap(ctx.pid)
-	if deskId == nil then
-		local desk = skynet.newservice("desk")
-		deskId = skynet.call(desk, "lua", "GetDeskId")
+	local deskId = req.deskId
+	local desk = self:GetIdDeskMap(deskId)
+	if desk == nil then
+		desk = skynet.newservice("desk")
+		skynet.call(desk, "lua", "init", deskId)
 
 		self:SetIdDeskMap(deskId, desk) 
 	end
-	local desk = self:GetIdDeskMap(deskId)
-	local result = skynet.call(desk, "lua", "AddPlayer", pid, fd)
+	local result = skynet.call(desk, "lua", "AddPlayer", player.NewPlayer(pid, fd))
 	if result == const.Ret.Ok then
 		self:SetPidDeskIdMap(pid, deskId)
 	end
@@ -66,7 +67,6 @@ function _this:LoginGame(req, ctx )
 end
 
 skynet.start(function()
-
     skynet.dispatch("lua", function(_,_, command, ...)
 		local f = _this[command]
 		if f then

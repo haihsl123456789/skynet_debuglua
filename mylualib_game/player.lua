@@ -2,6 +2,7 @@ local log = require "log"
 local config = require "cfgjson"
 local math = math
 local mytime = require "mytime"
+local NetUtils = require "NetUtils"
 
 local _this = {}
 local _M = {}
@@ -106,8 +107,12 @@ end
 function _M:Update(curTime ) 
 end
 
-function _M:SendMsg(pMsg ) --interface{}) 
-	self.Con.Send(pMsg)
+function _M:UpdateCon(con) 
+	self.Con = con
+end
+
+function _M:SendMsg(msgName, pMsg ) --interface{}) 
+	NetUtils:pushMessage(self.Con, msgName, pMsg)
 end
 
 

@@ -10,6 +10,7 @@ local log = require "log"
 local bullet = require "bullet"
 local alghelper = require "alghelper"
 local makefish = require "makefish"
+local NetUtils = require "NetUtils"
 
 local _this = {}
 local _M = {}
@@ -73,10 +74,8 @@ local function start_timer(interval, my_timer_task)
 	return cancel
 end
 
-function NewDesk(deskid ) --*Desk {
-	local ret = {
-
-    }
+function NewDesk(deskid) --*Desk {
+	local ret = {}
 	ret.DeskId = deskid
 	ret.ComMap = {} -- make(map[string]Component)
 	ret.Rpc = {} -- chanrpc.NewChanRpc(1000, false)
@@ -97,6 +96,7 @@ function NewDesk(deskid ) --*Desk {
 	ret.mainloopCancel = start_timer(25, ret.mainloop)
 	ret.savedbCancel = start_timer(1, ret.savedb)
 	-- go ret.msgloop()
+	setmetatable(ret, {__index=_M})
 	
 	return ret
 end
@@ -206,6 +206,12 @@ function _M:GetIdlePostion() --int {
 end
 
 function _M:AddPlayer(player) --int {
+	if self.IdPlayerMap[player.PlayerId] ~= nil then
+		local p = self.IdPlayerMap[player.PlayerId]
+		p.UpdateCon = player.Con
+		return 0
+	end
+
 	local pos = self:GetIdlePostion()
 	if pos == ERR_SEAT then
 		log.Println("pos == ERR_SEAT@@@@@@@@@@@@@@@@@@", pos)
@@ -401,3 +407,27 @@ function _M:CollideFish(pid , req )
 
 	self:DelBullet((req.BulletId), "collide")
 end
+
+-- local _this = {}
+
+local _this = {}
+function _this.init(deskid)
+	_this = NewDesk(deskid)
+end
+
+
+skynet.start(function()
+	NetUtils:register()
+
+    skynet.dispatch("lua", function(_,_, command, ...)
+		local f = _this[command]
+		if f then
+			skynet.ret(skynet.pack(f(_this, ...)))
+		else
+			log("desk Unknown command : [%s]", command)
+			skynet.response()(false)
+		end
+	end)
+
+    -- skynet.register "playermgr"
+end)
