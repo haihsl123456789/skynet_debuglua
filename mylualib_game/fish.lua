@@ -93,7 +93,7 @@ function _M:ChangeEndLifeTime(endLifeTime )
 end
 
 function _M:Update(curTime ) 
-	if !self.IsInLifeTime(curTime) then
+	if not self.IsInLifeTime(curTime) then
 		return
     end
 	--todo: update position

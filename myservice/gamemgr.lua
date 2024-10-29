@@ -3,6 +3,7 @@ require "skynet.manager"	-- import skynet.register
 local log = require "log"
 local const = require "const"
 local player = require "player"
+local NetUtils = require "NetUtils"
 
 
 local _this = {
@@ -39,13 +40,14 @@ end
 ------------------------------------
 
 
+function _this:SetBullet(req, ctx ) 
+end
 
+function _this:Fire(req, ctx ) 
+end
 
-
-
-
-
-------------------------------------
+function _this:CollideFish(req, ctx ) 
+end
 
 function _this:LoginGame(req, ctx ) 
 	local pid = ctx.pid
@@ -59,14 +61,21 @@ function _this:LoginGame(req, ctx )
 
 		self:SetIdDeskMap(deskId, desk) 
 	end
-	local result = skynet.call(desk, "lua", "AddPlayer", player.NewPlayer(pid, fd))
+	local player_info = {
+		PlayerId = pid,
+		Con = fd,
+	}
+	local result = skynet.call(desk, "lua", "AddPlayer", player_info)  --todo这里player传过去应该有点问题
 	if result == const.Ret.Ok then
 		self:SetPidDeskIdMap(pid, deskId)
 	end
+	-- NetUtils:sendPackage(ctx.fd, req._response({ret=result}))
 	return result
 end
 
 skynet.start(function()
+	NetUtils:register()
+
     skynet.dispatch("lua", function(_,_, command, ...)
 		local f = _this[command]
 		if f then
@@ -77,5 +86,5 @@ skynet.start(function()
 		end
 	end)
 
-    skynet.register "playermgr"
+    skynet.register "gamemgr"
 end)

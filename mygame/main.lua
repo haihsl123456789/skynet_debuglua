@@ -25,6 +25,8 @@ skynet.start(function()
 	skynet.uniqueservice("sessionmgr")
 	skynet.uniqueservice("gamemgr")
 
+	-- local desk = skynet.uniqueservice("desk")
+
 	local watchdog = skynet.newservice("watchdog")
 	skynet.call(watchdog, "lua", "start", {
 		port = 5000,      

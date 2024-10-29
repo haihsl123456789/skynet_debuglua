@@ -138,7 +138,7 @@ local function print_package(t, ...)
 
 		if name == "Login" then
 			if args.result == 0 then
-				send_request("LoginGame", {token="tokenxx",deskId=112 })		
+				send_request("LoginGame", {token=args.token,deskId=112 })		
 			end
 		elseif name == "LoginGame" then			
 			if args.ret == 0 then
@@ -171,7 +171,7 @@ while true do
 		if cmd == "quit" then
 			send_request("quit")
 		elseif cmd == "login" then
-			send_request("Login", {username="jack", password="pw123"})			
+			send_request("Login", {username="jack", password="123456"})			
 		else
 			send_request("get", { what = cmd })
 		end

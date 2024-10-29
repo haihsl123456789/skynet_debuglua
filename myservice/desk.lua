@@ -11,6 +11,8 @@ local bullet = require "bullet"
 local alghelper = require "alghelper"
 local makefish = require "makefish"
 local NetUtils = require "NetUtils"
+local cfgjson = require "cfgjson"
+local playerbase = require "player"
 
 local _this = {}
 local _M = {}
@@ -76,6 +78,7 @@ end
 
 function NewDesk(deskid) --*Desk {
 	local ret = {}
+	setmetatable(ret, {__index=_M})
 	ret.DeskId = deskid
 	ret.ComMap = {} -- make(map[string]Component)
 	ret.Rpc = {} -- chanrpc.NewChanRpc(1000, false)
@@ -91,12 +94,12 @@ function NewDesk(deskid) --*Desk {
 	local tideFishIds = {1, 2, 3}
 	ret.ComMake:Init(freeFishIds, tideFishIds)
 
-	ret.GotoStepFree()
+	ret:GotoStepFree()
 	--
 	ret.mainloopCancel = start_timer(25, ret.mainloop)
 	ret.savedbCancel = start_timer(1, ret.savedb)
 	-- go ret.msgloop()
-	setmetatable(ret, {__index=_M})
+	
 	
 	return ret
 end
@@ -205,12 +208,14 @@ function _M:GetIdlePostion() --int {
 	return ERR_SEAT
 end
 
-function _M:AddPlayer(player) --int {
-	if self.IdPlayerMap[player.PlayerId] ~= nil then
-		local p = self.IdPlayerMap[player.PlayerId]
-		p.UpdateCon = player.Con
+function _M:AddPlayer(info) --int {
+	if self.IdPlayerMap[info.PlayerId] ~= nil then
+		local p = self.IdPlayerMap[info.PlayerId]
+		p:UpdateCon(info.Con)
 		return 0
 	end
+
+	local player = playerbase.NewPlayer(info.PlayerId, info.Con)
 
 	local pos = self:GetIdlePostion()
 	if pos == ERR_SEAT then
@@ -218,11 +223,11 @@ function _M:AddPlayer(player) --int {
 		return ERR_FISH_NO_SEAT
     end
 	----------------init player--------------
-	self.IdPlayerMap[player.PlayerId] = player
+	self.IdPlayerMap[info.PlayerId] = player
 	self.PosPlayerMap[pos] = player
 
-	player.SetPosition(pos)
-	player.SetSitDownTime()
+	player:SetPosition(pos)
+	player:SetSitDownTime()
 
 	-- TablePlayerInfoEvent msg;
 	-- getInDeskFishPlayerMap(msg.fishPlayerInfo);
@@ -348,7 +353,7 @@ function _M:Fire(pid , req )
 	if player == nil then
 		return
     end
-	if !player:EnoughGold((req.BulletTimes)) then
+	if not player:EnoughGold((req.BulletTimes)) then
 		return
     end
 	player:SubGold((req.BulletTimes))
@@ -384,7 +389,7 @@ function _M:CollideFish(pid , req )
     end
 	local fishid = (req.AreaFishIds[0])
 	local fish = self.IdFishMap[fishid]
-	if fish == nil or !fish:IsInLifeTime(curTime) then
+	if fish == nil or (not fish:IsInLifeTime(curTime)) then
 		log.Println("collide fish: no fish || !fish.IsInLifeTime(curTime)")
 		return
     end
@@ -411,13 +416,15 @@ end
 -- local _this = {}
 
 local _this = {}
-function _this.init(deskid)
+function _this:init(deskid)
 	_this = NewDesk(deskid)
+	return 0
 end
 
 
 skynet.start(function()
 	NetUtils:register()
+	cfgjson.Initcfgjson()
 
     skynet.dispatch("lua", function(_,_, command, ...)
 		local f = _this[command]

@@ -3,6 +3,7 @@ require "skynet.manager"	-- import skynet.register
 local log = require "log"
 local myrand = require "myrand"
 local mytime = require "mytime"
+local NetUtils = require "NetUtils"
 
 -- type SessionInf struct {
 -- 	session   string
@@ -50,6 +51,8 @@ function  CMD.GetPid(session ) --int {
 end
 
 skynet.start(function()
+	NetUtils:register()
+
     skynet.dispatch("lua", function(_,_, command, ...)
 		local f = CMD[command]
 		if f then

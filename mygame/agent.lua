@@ -7,7 +7,8 @@ local const = require "const"
 local db = require "db"
 local dbpool = require "dbpool"
 local config = require "config"
-local mydbpool = dbpool.NewPool(config.db, 10)
+local NetUtils = require "NetUtils"
+local mydbpool
 
 local WATCHDOG
 local host
@@ -61,13 +62,14 @@ function REQUEST:LoginGame()
 		return {ret=const.Ret.SessionError}	 --session error
 	end
 
-	local ret = skynet.call("gamemgr", "lua", "LoginGame",  ctx)
+	local ret = skynet.call("gamemgr", "lua", "LoginGame", self,  ctx )
 	return { ret = ret}
 end
 
 function REQUEST:SetBullet()
 	log.printdump(self, "SetBullet")
-	return { ret = 0}
+	local ret = skynet.send("gamemgr", "lua", "SetBullet",  self, ctx)
+	-- return { ret = 0}
 end
 
 function REQUEST:Fire()
@@ -77,6 +79,7 @@ end
 
 function REQUEST:CollideFish()
 	log.printdump(self, "CollideFish")
+	local ret = skynet.send("gamemgr", "lua", "CollideFish",  self, ctx)
 	-- return { ret = 0}
 end
 
@@ -85,8 +88,11 @@ function REQUEST:quit()
 end
 
 local function request(name, args, response)
+	args = args or {}
+	-- args._response = response
+
 	local f = assert(REQUEST[name])
-	local r = f(args)
+	local r = f( args, response)
 	if response then
 		return response(r)
 	end
@@ -124,6 +130,9 @@ skynet.register_protocol {
 }
 
 function CMD.start(conf)
+
+	mydbpool = dbpool.NewPool(config.db, 10)
+
 	local fd = conf.client
 	local gate = conf.gate
 	WATCHDOG = conf.watchdog
@@ -147,6 +156,8 @@ function CMD.disconnect()
 end
 
 skynet.start(function()
+	NetUtils:register()
+
 	skynet.dispatch("lua", function(_,_, command, ...)
 		skynet.trace()
 		local f = CMD[command]

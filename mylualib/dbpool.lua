@@ -2,7 +2,7 @@ local skynet = require "skynet"
 require "skynet.manager" -- import skynet.register
 local log = require "log"
 
-local mysql = require "mysql"
+local mysql = require "skynet.db.mysql"
 local C_MAX_MYSQL_CONNECT = 10
 
 local function newConnect(dbconfig)
@@ -40,7 +40,7 @@ function _M:init(dbconfig, max_con)
     max_con = max_con or C_MAX_MYSQL_CONNECT
     local cnt = 0
     while cnt < max_con do
-        local r = newConnect()
+        local r = newConnect(dbconfig)
         if r then
             cnt = cnt + 1
             self.connect[cnt] = r
@@ -52,31 +52,31 @@ function _M:init(dbconfig, max_con)
     self.max_con = cnt
     log.debug("sql connect:%d", self.max_con)
 
-    return mysql_con_cnt_rel > 0
+    return self.max_con > 0
 end
 
 function _M:release()
     for cnt = 1, self.max_con do
-        if self.connent[cnt] then
-            self.connent[cnt].database:disconnect()
+        if self.connect[cnt] then
+            self.connect[cnt].database:disconnect()
             self.connect[cnt] = nil
         end
     end
     self.max_con  = 0
-    self.connent = {}
+    self.connect = {}
 end
 
 function _M:getCon()
     while self.max_con > 0 do
         for cnt = 1, self.max_con do
-            if not self.connent[cnt].isQuerying then
-                self.connent[cnt].isQuerying = true
+            if not self.connect[cnt].isQuerying then
+                self.connect[cnt].isQuerying = true
                 --print("===cnt:",cnt)
                 --print("dc --[+]--player connect")
-                return self.connent[cnt].database
+                return self.connect[cnt].database
             end
         end
-        log.error("%s: getConnent:no connent", self.dbconfig.database, self.max_con)
+        log.error("%s: getConnent:no connect", self.dbconfig.database, self.max_con)
         skynet.sleep(10)
     end
     return nil    

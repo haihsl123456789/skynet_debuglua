@@ -12,8 +12,8 @@ harbor = 1
 address = "127.0.0.1:2526"
 master = "127.0.0.1:2013"
 
--- start = "main"	-- main script
-start = "tmain_call"	-- main script
+start = "main"	-- main script
+-- start = "tmain_call"	-- main script
 -- start = "tmain01"	-- main script
 -- start = "main_mysql"	-- main script
 

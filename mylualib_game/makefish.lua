@@ -3,7 +3,7 @@ local config = require "cfgjson"
 local math = math
 local mytime = require "mytime"
 local myrand = require "myrand"
-local utils = require "utils"
+local utils = require "Utils"
 
 local mfish = require "fish"
 
@@ -35,6 +35,7 @@ function _this.NewMakeComponect(en ) --Component {
             baseTime   = 0 , --基准时间
             timelength = 0 , --时长        
     }
+	setmetatable(ret, {__index=_M})
 	-- ret.owner = en
 	-- ret.freeIds = make([]int, 0)
 	return ret
@@ -49,7 +50,7 @@ function _M:OwnerDesk() --*Desk {
 end
 
 function _M:Init(freeFishIds , tideFishIds ) --{
-	self.freeIds = utils.clone(freeFishIds)
+	self.freeIds = utils:clone(freeFishIds)
 end
 
 function _M:BeginFree(t ) --{
