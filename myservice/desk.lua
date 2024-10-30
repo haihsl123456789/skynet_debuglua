@@ -436,7 +436,7 @@ end
 
 skynet.start(function()
 	NetUtils:register()
-	cfgjson.Initcfgjson()
+	cfgjson.load()
 
     skynet.dispatch("lua", function(_,_, command, ...)
 		local f = _this[command]

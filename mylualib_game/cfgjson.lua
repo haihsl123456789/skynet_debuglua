@@ -2,6 +2,8 @@ local log = require "log"
 local lfs = require("lfs")
 local cjson = require("cjson")
 local string = string
+local shareData = require "skynet.sharedata"
+local sharetable = require "skynet.sharetable"
 
 cjson.encode_empty_table_as_array(true)  --???
 
@@ -408,7 +410,23 @@ function jsoncfg.Initcfgjson()
 	parseDir("./jsondata")
 	log.Println("parse json ok!!")
 	-- log.printdump(jsoncfg, "jsoncfg:")
+
+	--
+	local _jsoncfg = {}
+	_jsoncfg.Fish = jsoncfg.Fish
+	_jsoncfg.Track = jsoncfg.Track
+	_jsoncfg.Tide = jsoncfg.Tide
+	_jsoncfg.Free = jsoncfg.Free
+	_jsoncfg.FishMapping = jsoncfg.FishMapping
+	_jsoncfg.Fish = jsoncfg.Fish
+	-- shareData.update("cfgjson", _jsoncfg)
+	sharetable.loadtable("cfgjson", _jsoncfg)
 end
 
+function jsoncfg.load() 
+	-- local _jsoncfg = shareData.query("cfgjson")
+	local _jsoncfg = sharetable.query("cfgjson")
+	setmetatable(jsoncfg, {__index=_jsoncfg})
+end
 
 return jsoncfg

@@ -3,8 +3,9 @@ local config = require "config"
 local mysql = require "skynet.db.mysql"
 local log = require "log"
 local const=require "const"
-local debugEx=require "debugEx"
+local cfgjson = require "cfgjson"
 
+local debugEx=require "debugEx"
 local test = require "test"  
     
 skynet.start(function()
@@ -24,6 +25,7 @@ skynet.start(function()
 	
 	skynet.uniqueservice("sessionmgr")
 	skynet.uniqueservice("gamemgr")
+	cfgjson.Initcfgjson()
 
 	-- local desk = skynet.uniqueservice("desk")
 
