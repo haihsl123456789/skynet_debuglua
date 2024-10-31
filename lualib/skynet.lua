@@ -831,6 +831,8 @@ local function raw_dispatch_message(prototype, msg, sz, session, source)
 end
 
 function skynet.dispatch_message(...)
+	-- skynet.error("~~~~~~~~~~skynet.dispatch_message",...)
+
 	local succ, err = pcall(raw_dispatch_message,...)
 	while true do
 		if fork_queue.h > fork_queue.t then
