@@ -1,0 +1,206 @@
+.package {
+	type 0 : integer
+	session 1 : integer
+}
+
+
+handshake 1 {
+	response {
+		msg 0  : string
+	}
+}
+
+get 2 {
+	request {
+		what 0 : string
+	}
+	response {
+		result 0 : string
+	}
+}
+
+set 3 {
+	request {
+		what 0 : string
+		value 1 : string
+	}
+}
+
+quit 4 {}
+
+#--------------------------------------------------------------------
+
+
+Login 100 {
+	request {
+		username 1 : string
+		password 2 : string
+	}
+	response {
+		result 0  : integer             
+						# 0 is ok
+						# 结果为1: 用户名密码错误：
+		pid 1 : integer	#玩家ID
+		token	  2	: string	#令牌
+	}
+}
+
+Register 101  {	
+	request {
+		username 0: string
+		password 1: string
+	}
+	response {
+		result 0 : integer	
+					# 0 is ok
+					# 1 :  用户名已存在
+		pid 1 : integer
+	}
+}
+
+Chat 102 {							
+	request {
+		des_pid    1 : integer	#接收人id，0: broadcast
+		mgs   2 : string     #utf8
+	}
+	response {
+		result 0 : integer  # 0 : ok， 1 : 不成功
+	}
+}
+
+.Point {
+	x 0 : double
+	y 1 : double
+}
+
+.Fish {
+	timeStamp 1 : integer 		
+	fishId 2 : integer        
+	fishTypeId 3 : integer
+	trackId 4 : integer
+	trackOffset 5 : Point	
+}
+
+.Bullet {
+	timeStamp 1 : integer
+	bulletId 2 : integer		#唯一码
+	direction 3 : Point
+	bulletTimes 4 : integer	
+	targetFishId 5 : integer   #用于锁定鱼，0：表示没有
+	bulletType 6 : integer
+	position 7 : integer	
+
+}
+.PlayerPayInf{
+    matchPay 1  : integer		
+    rank 2  : integer  
+}
+
+.Player {
+	pid 1 : integer
+    nickname 2 : string   
+    headimage 3 : string
+	sex 4 : integer                       #性别  0：未设置；1：男；2：女
+
+	position 10  : integer           #桌子位置编号
+	cannonType 11  : integer
+	cannonTimes 12  : integer		#炮台级别,1表示最低级别
+
+	bullet 20  : integer			#比赛用 剩余子弹
+	gold 21 : integer  
+	score 22  : integer				#比赛用 分数
+    
+    pay 30 : PlayerPayInf
+}
+
+#===========================================================
+
+LoginGame  200{
+	request {
+		token 0 : string
+		
+		#gameId 1 : integer
+		#roomId 2 : integer
+		#clubId 3 : integer
+		deskId 4 : integer
+	}
+	response {
+		ret 1 : integer
+	}
+}
+
+
+LogoutGame 201{
+	request {
+	}
+	response {
+		ret 1 : integer
+	}
+}
+
+
+HeartBeat 202{
+	request {
+		clientTime 0 : integer
+	}
+	response {
+		clientTime 0 : integer
+		serverTime 1 : integer
+	}	
+}
+
+
+QryTable 203{
+	request {
+	}
+	response {
+		dealId 1 : string
+		status 2 : integer
+		players 3 : *Player  
+		fishes 4 : *Fish  
+		scenceId 5 : integer
+
+		matchBeginTime 6 : integer
+		matchTimeLength 7 : integer
+	}	
+}
+
+
+SetBullet 204{
+	request {
+    	bulletType 1 : integer		#炮台类型	
+		bulletTimes 2 : integer		#炮台倍数
+	}
+	response {
+		ret 1 : integer
+	}
+}
+
+
+Fire 205{
+	request {
+		bulletType 1 : integer    
+		bulletTimes 2 : integer
+		direction 3 : Point
+		targetFishId 4 : integer   #用于锁定鱼，0：表示没有
+	}
+}
+
+
+CollideFish 206{
+	request {
+		bulletId 1 : integer
+		areaFishIds 2 : *integer
+	}
+}
+
+
+
+
+
+
+
+
+
+
+

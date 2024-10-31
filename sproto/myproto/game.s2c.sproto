@@ -1,0 +1,77 @@
+.package {
+	type 0 : integer
+	session 1 : integer
+}
+heartbeat 1 {}
+
+.Point {
+	x 0 : double
+	y 1 : double
+}
+
+.Fish {
+	timeStamp 1 : integer 		
+	fishId 2 : integer        
+	fishTypeId 3 : integer
+	trackId 4 : integer
+	trackOffset 5 : Point	
+}
+
+.Bullet {
+	timeStamp 1 : integer
+	bulletId 2 : integer		#唯一码
+	direction 3 : Point
+	bulletTimes 4 : integer	
+	targetFishId 5 : integer   #用于锁定鱼，0：表示没有
+	bulletType 6 : integer
+	position 7 : integer	
+
+}
+.PlayerPayInf{
+    matchPay 1  : integer		
+    rank 2  : integer  
+}
+
+.Player {
+	pid 1 : integer
+    nickname 2 : string   
+    headimage 3 : string
+	sex 4 : integer                       #性别  0：未设置；1：男；2：女
+
+	position 10  : integer           #桌子位置编号
+	cannonType 11  : integer
+	cannonTimes 12  : integer		#炮台级别,1表示最低级别
+
+	bullet 20  : integer			#比赛用 剩余子弹
+	gold 21 : integer  
+	score 22  : integer				#比赛用 分数
+    
+    pay 30 : PlayerPayInf
+}
+
+#===========================================================
+
+FirePush 300{
+	request {
+    	bullet 1 : Bullet
+	}
+}
+
+.CatchFishInfo {
+	fishId 1 : integer
+	fishTimes 2 : integer
+	getGold 3 : integer
+}
+CollideFishPush 301{
+	request {
+		bulletId 1 : integer
+		collideFishId 2 : integer
+		catchFishes 3 : *CatchFishInfo
+	}
+}
+
+FishesPush 302{
+	request {
+    	fishes 1 : *Fish
+	}
+}

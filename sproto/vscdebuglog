@@ -1,0 +1,165 @@
+21/08/24 20:37:31.29 [:01000002] LAUNCH snlua bootstrap
+21/08/24 20:37:31.31 [:01000002] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/bootstrap.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.31 [:01000003] LAUNCH snlua launcher
+21/08/24 20:37:31.31 [:01000003] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/launcher.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.31 [:01000004] LAUNCH snlua cmaster
+21/08/24 20:37:31.32 [:01000004] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.32 [:01000004] co.vsc.db.112|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|master listen socket 0.0.0.0:2013
+21/08/24 20:37:31.32 [:01000005] LAUNCH snlua cslave
+21/08/24 20:37:31.32 [:01000005] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.32 [:01000005] co.vsc.db.233|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|slave connect to master 127.0.0.1:2013
+21/08/24 20:37:31.32 [:01000004] co.vsc.db.115|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|connect from 127.0.0.1:44616 4
+21/08/24 20:37:31.32 [:01000006] LAUNCH harbor 1 16777221
+21/08/24 20:37:31.32 [:01000004] co.vsc.db.99|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|Harbor 1 (fd=4) report 127.0.0.1:2526
+21/08/24 20:37:31.32 [:01000005] co.vsc.db.248|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Waiting for 0 harbors
+21/08/24 20:37:31.32 [:01000005] co.vsc.db.271|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Shakehand ready
+21/08/24 20:37:31.32 [:01000007] LAUNCH snlua datacenterd
+21/08/24 20:37:31.32 [:01000007] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/datacenterd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.32 [:01000008] LAUNCH snlua service_mgr
+21/08/24 20:37:31.32 [:01000008] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/service_mgr.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.32 [:01000009] LAUNCH snlua main
+21/08/24 20:37:31.33 [:01000009] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.33 [:01000009] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	main
+21/08/24 20:37:31.33 [:0100000a] LAUNCH snlua vscdebugd
+21/08/24 20:37:31.33 [:0100000a] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/vscdebugd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.33 [:01000009] co.vsc.db.7|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Server start
+21/08/24 20:37:31.33 [:0100000b] LAUNCH snlua protoloader
+21/08/24 20:37:31.33 [:0100000b] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/protoloader.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.34 [:0100000b] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	protoloader
+21/08/24 20:37:31.34 [:0100000c] LAUNCH snlua console
+21/08/24 20:37:31.34 [:0100000c] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.34 [:0100000d] LAUNCH snlua debug_console 8000
+21/08/24 20:37:31.34 [:0100000c] lua call [0 to :100000c : 0 msgsz = 56] error : [31m./lualib/skynet.lua:858: ./lualib/skynet.lua:330: ./lualib/skynet/socket.lua:358: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet/socket.lua:358: in function 'skynet.socket.readline'
+	./service/console.lua:16: in upvalue 'f'
+	./lualib/skynet.lua:253: in function <./lualib/skynet.lua:252>
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet.lua:858: in function 'skynet.dispatch_message'[0m
+21/08/24 20:37:31.34 [:0100000d] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.35 [:0100000d] co.vsc.db.122|/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua|Start debug console at 127.0.0.1:8000
+21/08/24 20:37:31.35 [:0100000e] LAUNCH snlua simpledb
+21/08/24 20:37:31.35 [:0100000e] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/simpledb.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.35 [:0100000e] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	simpledb
+21/08/24 20:37:31.35 [:0100000f] LAUNCH snlua watchdog
+21/08/24 20:37:31.35 [:0100000f] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/watchdog.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.35 [:0100000f] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	watchdog
+21/08/24 20:37:31.35 [:01000010] LAUNCH snlua gate
+21/08/24 20:37:31.35 [:01000010] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:31.35 [:01000010] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	gate
+21/08/24 20:37:31.36 [:01000010] co.vsc.db.43|/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua|Listen on 0.0.0.0:8888
+21/08/24 20:37:31.36 [:01000009] co.vsc.db.20|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Watchdog listen on	8888
+21/08/24 20:37:31.36 [:01000009] KILL self
+21/08/24 20:37:31.36 [:01000002] KILL self
+21/08/24 20:37:40.91 [:01000002] LAUNCH snlua bootstrap
+21/08/24 20:37:40.93 [:01000002] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/bootstrap.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.93 [:01000003] LAUNCH snlua launcher
+21/08/24 20:37:40.93 [:01000003] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/launcher.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.93 [:01000004] LAUNCH snlua cmaster
+21/08/24 20:37:40.93 [:01000004] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.93 [:01000004] co.vsc.db.112|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|master listen socket 0.0.0.0:2013
+21/08/24 20:37:40.93 [:01000005] LAUNCH snlua cslave
+21/08/24 20:37:40.93 [:01000005] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.93 [:01000005] co.vsc.db.233|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|slave connect to master 127.0.0.1:2013
+21/08/24 20:37:40.93 [:01000004] co.vsc.db.115|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|connect from 127.0.0.1:54794 4
+21/08/24 20:37:40.93 [:01000006] LAUNCH harbor 1 16777221
+21/08/24 20:37:40.93 [:01000004] co.vsc.db.99|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|Harbor 1 (fd=4) report 127.0.0.1:2526
+21/08/24 20:37:40.93 [:01000005] co.vsc.db.248|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Waiting for 0 harbors
+21/08/24 20:37:40.93 [:01000005] co.vsc.db.271|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Shakehand ready
+21/08/24 20:37:40.93 [:01000007] LAUNCH snlua datacenterd
+21/08/24 20:37:40.94 [:01000007] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/datacenterd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.94 [:01000008] LAUNCH snlua service_mgr
+21/08/24 20:37:40.94 [:01000008] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/service_mgr.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.94 [:01000009] LAUNCH snlua main
+21/08/24 20:37:40.94 [:01000009] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.94 [:01000009] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	main
+21/08/24 20:37:40.94 [:0100000a] LAUNCH snlua vscdebugd
+21/08/24 20:37:40.95 [:0100000a] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/vscdebugd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.95 [:01000009] co.vsc.db.7|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Server start
+21/08/24 20:37:40.95 [:0100000b] LAUNCH snlua protoloader
+21/08/24 20:37:40.96 [:0100000b] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/protoloader.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.96 [:0100000b] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	protoloader
+21/08/24 20:37:40.96 [:0100000c] LAUNCH snlua console
+21/08/24 20:37:40.96 [:0100000c] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.97 [:0100000d] LAUNCH snlua debug_console 8000
+21/08/24 20:37:40.97 [:0100000c] lua call [0 to :100000c : 0 msgsz = 56] error : [31m./lualib/skynet.lua:858: ./lualib/skynet.lua:330: ./lualib/skynet/socket.lua:358: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet/socket.lua:358: in function 'skynet.socket.readline'
+	./service/console.lua:16: in upvalue 'f'
+	./lualib/skynet.lua:253: in function <./lualib/skynet.lua:252>
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet.lua:858: in function 'skynet.dispatch_message'[0m
+21/08/24 20:37:40.97 [:0100000d] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.97 [:0100000d] co.vsc.db.122|/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua|Start debug console at 127.0.0.1:8000
+21/08/24 20:37:40.97 [:0100000e] LAUNCH snlua simpledb
+21/08/24 20:37:40.97 [:0100000e] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/simpledb.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.97 [:0100000e] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	simpledb
+21/08/24 20:37:40.97 [:0100000f] LAUNCH snlua watchdog
+21/08/24 20:37:40.97 [:0100000f] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/watchdog.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.97 [:0100000f] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	watchdog
+21/08/24 20:37:40.98 [:01000010] LAUNCH snlua gate
+21/08/24 20:37:40.98 [:01000010] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:40.98 [:01000010] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	gate
+21/08/24 20:37:40.98 [:01000010] co.vsc.db.43|/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua|Listen on 0.0.0.0:8888
+21/08/24 20:37:40.98 [:01000009] co.vsc.db.20|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Watchdog listen on	8888
+21/08/24 20:37:40.98 [:01000009] KILL self
+21/08/24 20:37:40.98 [:01000002] KILL self
+21/08/24 20:37:58.54 [:01000002] LAUNCH snlua bootstrap
+21/08/24 20:37:58.54 [:01000002] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/bootstrap.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.54 [:01000003] LAUNCH snlua launcher
+21/08/24 20:37:58.54 [:01000003] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/launcher.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.54 [:01000004] LAUNCH snlua cmaster
+21/08/24 20:37:58.54 [:01000004] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.54 [:01000004] co.vsc.db.112|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|master listen socket 0.0.0.0:2013
+21/08/24 20:37:58.54 [:01000005] LAUNCH snlua cslave
+21/08/24 20:37:58.54 [:01000005] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.54 [:01000005] co.vsc.db.233|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|slave connect to master 127.0.0.1:2013
+21/08/24 20:37:58.54 [:01000004] co.vsc.db.115|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|connect from 127.0.0.1:45478 4
+21/08/24 20:37:58.54 [:01000006] LAUNCH harbor 1 16777221
+21/08/24 20:37:58.54 [:01000004] co.vsc.db.99|/home/lhb/work/git_scgame/skynet_debuglua/service/cmaster.lua|Harbor 1 (fd=4) report 127.0.0.1:2526
+21/08/24 20:37:58.54 [:01000005] co.vsc.db.248|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Waiting for 0 harbors
+21/08/24 20:37:58.55 [:01000005] co.vsc.db.271|/home/lhb/work/git_scgame/skynet_debuglua/service/cslave.lua|Shakehand ready
+21/08/24 20:37:58.55 [:01000007] LAUNCH snlua datacenterd
+21/08/24 20:37:58.55 [:01000007] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/datacenterd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.55 [:01000008] LAUNCH snlua service_mgr
+21/08/24 20:37:58.55 [:01000008] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/service_mgr.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.55 [:01000009] LAUNCH snlua main
+21/08/24 20:37:58.55 [:01000009] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:37:58.55 [:01000009] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	main
+21/08/24 20:37:58.55 [:0100000a] LAUNCH snlua vscdebugd
+21/08/24 20:37:58.55 [:0100000a] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/vscdebugd.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.71 [:01000009] co.vsc.db.7|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Server start
+21/08/24 20:38:00.71 [:0100000b] LAUNCH snlua protoloader
+21/08/24 20:38:00.71 [:0100000b] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/protoloader.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.71 [:0100000b] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	protoloader
+21/08/24 20:38:00.72 [:0100000c] LAUNCH snlua console
+21/08/24 20:38:00.72 [:0100000c] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.72 [:0100000d] LAUNCH snlua debug_console 8000
+21/08/24 20:38:00.72 [:0100000c] lua call [0 to :100000c : 0 msgsz = 56] error : [31m./lualib/skynet.lua:858: ./lualib/skynet.lua:330: ./lualib/skynet/socket.lua:358: assertion failed!
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet/socket.lua:358: in function 'skynet.socket.readline'
+	./service/console.lua:16: in upvalue 'f'
+	./lualib/skynet.lua:253: in function <./lualib/skynet.lua:252>
+stack traceback:
+	[C]: in function 'assert'
+	./lualib/skynet.lua:858: in function 'skynet.dispatch_message'[0m
+21/08/24 20:38:00.73 [:0100000d] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.73 [:0100000d] co.vsc.db.122|/home/lhb/work/git_scgame/skynet_debuglua/service/debug_console.lua|Start debug console at 127.0.0.1:8000
+21/08/24 20:38:00.73 [:0100000e] LAUNCH snlua simpledb
+21/08/24 20:38:00.73 [:0100000e] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/simpledb.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.73 [:0100000e] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	simpledb
+21/08/24 20:38:00.74 [:0100000f] LAUNCH snlua watchdog
+21/08/24 20:38:00.74 [:0100000f] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/examples/watchdog.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.74 [:0100000f] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	watchdog
+21/08/24 20:38:00.74 [:01000010] LAUNCH snlua gate
+21/08/24 20:38:00.74 [:01000010] co.vsc.db.443|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|source=/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua, service=/home/lhb/work/git_scgame/skynet_debuglua/service
+21/08/24 20:38:00.74 [:01000010] co.vsc.db.445|/home/lhb/work/git_scgame/skynet_debuglua/lualib/skynet/vscdebug.lua|start debug: 	gate
+21/08/24 20:38:00.74 [:01000010] co.vsc.db.43|/home/lhb/work/git_scgame/skynet_debuglua/lualib/snax/gateserver.lua|Listen on 0.0.0.0:8888
+21/08/24 20:38:00.75 [:01000009] co.vsc.db.20|/home/lhb/work/git_scgame/skynet_debuglua/examples/main.lua|Watchdog listen on	8888
+21/08/24 20:38:00.75 [:01000009] KILL self
+21/08/24 20:38:00.75 [:01000002] KILL self
